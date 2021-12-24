@@ -1,5 +1,6 @@
-import express, { Application, Request, Response } from "express";
-const mongoose = require("mongoose");
+import express, { Application } from "express";
+import * as recordControllers from './controllers/RecordControllers';
+import mongoose from "mongoose";
 
 const app: Application = express();
 const port = 3000;
@@ -9,12 +10,7 @@ const mongoUrl =
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-mongoose.connect(mongoUrl,
-  {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-  }
-);
+mongoose.connect(mongoUrl);
 
 const db = mongoose.connection;
 db.on("error", console.error.bind(console, "connection error: "));
@@ -24,13 +20,14 @@ db.once("open", function () {
 
 
 app.get(
-    "/",
-    async (req: Request, res: Response): Promise<Response> => {
-        return res.status(200).send({
-            message: "Hello World!",
-        });
-    }
+    '/records', 
+    recordControllers.getAllSearchedRecords,
 );
+
+app.get(
+    '/record/:id',
+    recordControllers.getRecord
+)
 
 try {
     app.listen(port, (): void => {
