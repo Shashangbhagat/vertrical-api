@@ -1,14 +1,17 @@
 import express, { Application } from "express";
-import * as recordControllers from './controllers/RecordControllers';
 import mongoose from "mongoose";
+import cors from 'cors';
+import dotenv from "dotenv";
+import * as recordControllers from './controllers/RecordControllers';
 
 const app: Application = express();
-const port = 3000;
-const mongoUrl = 
-    'mongodb+srv://vertrical:vertrical@cluster0.vggd7.mongodb.net/myFirstDatabase?retryWrites=true&w=majority';
+dotenv.config();
+const port = process.env.PORT;
+const mongoUrl = process.env.MONGOURL || ' ';
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 mongoose.connect(mongoUrl);
 
